@@ -3,15 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@atlaskit/button": "^9.0.15",
+    "@atlaskit/checkbox": "^5.0.3",
+    "@atlaskit/inline-edit": "^7.1.1",
+    "firebase": "^5.5.4",
+    "js-cookie": "^2.2.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.4"
+    "react-firebaseui": "^3.1.2",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.0.4",
+    "react-spinners": "^0.4.5",
+    "redux": "^4.0.0",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
