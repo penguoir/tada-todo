@@ -1,68 +1,64 @@
 import React from 'react'
 import { Checkbox } from '@atlaskit/checkbox'
-import { connect } from 'react-redux'
-import { editTask, removeTask } from '../store/actions/task'
+import { firestore } from '../lib/firebase'
 
 class Task extends React.Component {
   constructor(props) {
     super(props)
     
     this.state = {
-      value: this.props.task.data().title,
-      isDone: this.props.task.data().isDone
+      title: this.props.task.data().title,
+      done: this.props.task.data().done
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.commitChange = this.commitChange.bind(this)
     this.commitDone = this.commitDone.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
   // When changing title, auto-update it in state
   handleChange(e) {
-    this.setState({ value: e.target.value })
+    this.setState({ title: e.target.value })
+  }
+
+  handleKeyDown(e) {
+    if (e.which === 13) {
+      firestore.collection('tasks').add({
+        title: '',
+        user: require('js-cookie').get('userid')
+      })
+    }
+
+    if (e.which === 8 && !e.target.value) {
+      firestore.doc( this.props.task.ref.path ).delete()
+    }
   }
 
   // Commit a change to the task
   commitChange(e) {
+    var ref = this.props.task.ref.path
+    // Delete when no content
     if (!e.target.value) {
-      this.props.dispatch(
-        removeTask(
-          `projects/${this.props.task.ref.parent.parent.id}/tasks/${this.props.task.id}`
-        )
-      )
-
-      this.setState({ isDeleted: true })
-
-      return
+      return firestore.doc( ref ).delete()
     }
 
-    this.props.dispatch(
-      editTask(
-        this.props.task.id,
-        {
-          title: this.state.value,
-          project: this.props.task.ref.parent.parent.id
-        }
-      )
-    )
+    // Otherwise, edit the content
+    return firestore.doc( ref ).update({ title: this.state.title })
   }
 
   // Commit a change in completion
   commitDone(e) {
-    this.setState({ isDone: e.target.checked || false })
-    this.props.dispatch(
-      editTask(
-        this.props.task.id,
-        {
-          isDone: e.target.checked || false,
-          project: this.props.task.ref.parent.parent.id
-        }
-      )
-    )
+    var ref = this.props.task.ref.path
+    this.setState({ done: e.target.checked || false })
+    return firestore.doc( ref ).update({ done: e.target.checked || false })
+  }
+
+  componentDidMount() {
+    this.titleInput.focus()
   }
 
   render() {
-    console.log('Task recieved props', this.props.task)
     return (
       <div
         className="bg-near-white pv3 ph2 br1 mb2 task"
@@ -75,7 +71,7 @@ class Task extends React.Component {
         
         <Checkbox
           defaultChecked={
-            this.props.task.data().isDone
+            this.props.task.data().done
           }
           onClick={this.commitDone}
         />
@@ -84,18 +80,21 @@ class Task extends React.Component {
           <input
             style={{
               border: 'none',
-              backgroundColor: 'transparent',
               outline: 'none',
-              textDecoration: this.state.isDone ? 'line-through' : '',
-              width: '100%'
+              backgroundColor: 'transparent',
+              width: '100%',
+              lineHeight: '1.5',
+              textDecoration: this.state.done ? 'line-through' : '',
             }}
-            value={this.state.value}
+            value={this.state.title}
             onChange={this.handleChange}
-            onBlur={this.commitChange} />
+            onBlur={this.commitChange}
+            ref={(input) => { this.titleInput = input }}
+            onKeyDown={this.handleKeyDown}  />
         </p>
       </div>
     )
   }
 }
 
-export default connect()(Task)
+export default Task

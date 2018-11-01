@@ -1,19 +1,19 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import Button from '@atlaskit/button'
+import { firestore } from '../lib/firebase'
 
-import Button from './Button'
-
-import { addTask } from '../store/actions/task'
-
-function AddTask({ dispatch, project }) {
-  return (
-    <Button onClick={e => {
-      dispatch(addTask({
-        title: 'new task',
-        project: project.id
-      }))
-    }} appearance="primary" className="fr">+ Add Task</Button>
-  )
-}
-
-export default connect(state => ({ project: state.project }))(AddTask)
+export default () => (
+  <p style={{ float: 'right' }}>
+    <Button
+      appearance='primary'
+      onClick={e => {
+        firestore.collection('tasks').add({
+          title: '',
+          done: false,
+          user: require('js-cookie').get('userid')
+        })
+      }}>
+      + Add Task
+    </Button>
+  </p>
+)

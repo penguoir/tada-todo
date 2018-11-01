@@ -11,10 +11,9 @@ firebase.initializeApp({
   messagingSenderId: "195844346703"
 })
 
-
 const uiConfig = {
   signInFlow: 'redirect',
-  signInSuccessUrl: '/app',
+  signInSuccessUrl: '/',
   callbacks: {
     signInSuccess: function (authResult) {
       require('js-cookie').set('userid', authResult.uid)
@@ -28,8 +27,9 @@ const uiConfig = {
 }
 
 var firestore = firebase.firestore()
-var settings = {timestampsInSnapshots: true}
-firestore.settings(settings)
+firestore.settings({
+  timestampsInSnapshots: true
+})
 
 function JoinButton() {
   return <FirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
