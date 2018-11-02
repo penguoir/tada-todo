@@ -3,7 +3,7 @@ import Button from '@atlaskit/button'
 import { firestore } from '../lib/firebase'
 
 export default () => (
-  <p style={{ float: 'right' }}>
+  <p style={{ textAlign: 'right' }}>
     <Button
       appearance='primary'
       onClick={e => {
