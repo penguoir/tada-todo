@@ -14,7 +14,7 @@ class Index extends React.Component {
   }
 
   componentWillMount() {
-    if (!userid) window.location = '/join'
+    if (!userid) window.location = '/-/join'
 
     firestore.collection('tasks').where('user', '==', userid)
       .onSnapshot(doc => {
@@ -33,8 +33,10 @@ class Index extends React.Component {
         margin: '5em auto',
       }}>
         <h1>Tasks</h1>
-        {this.state.tasks.map(x => <Task key={x.id} task={x} />)}
         <AddTask />
+        <div>
+          {this.state.tasks.map(x => <Task key={x.id} task={x} />)}
+        </div>
       </div>
     )
   }
