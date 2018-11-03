@@ -31,27 +31,25 @@ class Task extends React.Component {
     }
 
     if (e.which === 8 && !e.target.value) {
-      firestore.doc( this.props.task.ref.path ).delete()
+      this.props.task.ref.delete()
     }
   }
 
   // Commit a change to the task
   commitChange(e) {
-    var ref = this.props.task.ref.path
     // Delete when no content
     if (!e.target.value) {
-      return firestore.doc( ref ).delete()
+      return this.props.task.ref.delete()
     }
 
     // Otherwise, edit the content
-    return firestore.doc( ref ).update({ title: this.state.title })
+    return this.props.task.ref.update({ title: this.state.title })
   }
 
   // Commit a change in completion
   commitDone(e) {
-    var ref = this.props.task.ref.path
     this.setState({ done: e.target.checked || false })
-    return firestore.doc( ref ).update({ done: e.target.checked || false })
+    return this.props.task.ref.update({ done: e.target.checked || false })
   }
 
   componentDidMount() {
