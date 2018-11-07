@@ -6,11 +6,14 @@ class Task extends React.Component {
   constructor(props) {
     super(props)
     
+    // Initial data from props -> state
     this.state = {
       title: this.props.task.data().title,
-      done: this.props.task.data().done
+      done: this.props.task.data().done, 
+      project: ''
     }
 
+    // Bind functions
     this.handleChange = this.handleChange.bind(this)
     this.commitChange = this.commitChange.bind(this)
     this.commitDone = this.commitDone.bind(this)
@@ -23,37 +26,53 @@ class Task extends React.Component {
   }
 
   handleKeyDown(e) {
+    // When pressing enter in a task, create a new task
     if (e.which === 13) {
       firestore.collection('tasks').add({
         title: '',
+        project: this.props.task.data().project,
         user: require('js-cookie').get('userid')
       })
     }
 
+    // When pressing delete when the title is empty, delete the task
     if (e.which === 8 && !e.target.value) {
-      this.props.task.ref.delete()
+      firestore.doc( this.props.task.ref.path ).delete()
     }
   }
 
   // Commit a change to the task
   commitChange(e) {
+    var ref = this.props.task.ref.path
     // Delete when no content
     if (!e.target.value) {
-      return this.props.task.ref.delete()
+      return firestore.doc( ref ).delete()
     }
 
     // Otherwise, edit the content
-    return this.props.task.ref.update({ title: this.state.title })
+    return firestore.doc( ref ).update({ title: this.state.title })
   }
 
   // Commit a change in completion
   commitDone(e) {
+    var ref = this.props.task.ref.path
     this.setState({ done: e.target.checked || false })
-    return this.props.task.ref.update({ done: e.target.checked || false })
+    return firestore.doc( ref ).update({ done: e.target.checked || false })
   }
 
   componentDidMount() {
-    this.titleInput.focus()
+    // Focus on last task in list automatically
+    // This also happens when creating a task. Curosr goes into it
+    if (this.titleInput) {
+      this.titleInput.focus()
+    }
+
+    if (this.props.task.data().project) {
+      // Set project to one gotten from project
+      firestore.doc('projects/' + this.props.task.data().project).get().then(doc => {
+        this.setState({ project: doc.data().title })
+      })
+    }
   }
 
   render() {
@@ -63,7 +82,7 @@ class Task extends React.Component {
         style={{
           display: 'grid',
           gridTemplateColumns: '16px auto',
-          gridGap: '16px'
+          gridGap: '8px'
         }}
       >
         
@@ -74,7 +93,7 @@ class Task extends React.Component {
           onClick={this.commitDone}
         />
 
-        <p className="ma0 dib">
+        <div>
           <input
             style={{
               border: 'none',
@@ -89,7 +108,13 @@ class Task extends React.Component {
             onBlur={this.commitChange}
             ref={(input) => { this.titleInput = input }}
             onKeyDown={this.handleKeyDown}  />
-        </p>
+          
+          {
+            // Show project if in all tasks mode
+            this.props.isAllTasks &&
+            <small className="mv0 w5">{ this.state.project }</small>
+          }
+        </div>
       </div>
     )
   }

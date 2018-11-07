@@ -5,7 +5,9 @@
   "dependencies": {
     "@atlaskit/button": "^9.0.15",
     "@atlaskit/checkbox": "^5.0.3",
+    "@atlaskit/field-text": "^7.0.13",
     "@atlaskit/inline-edit": "^7.1.1",
+    "@atlaskit/modal-dialog": "^7.0.5",
     "firebase": "^5.5.4",
     "js-cookie": "^2.2.0",
     "react": "^16.5.2",

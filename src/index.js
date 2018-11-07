@@ -12,6 +12,9 @@ ReactDOM.render((
     <>
       <Route exact path="/-/join" component={Join} />
       <Route exact path="/" component={App} />
+      <Route path="/project" render={props => (
+        <App location={props.location} />
+      )} />
     </>
   </BrowserRouter>
 ), document.getElementById('root'))
