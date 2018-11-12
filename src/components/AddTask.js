@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from '@atlaskit/button'
-import { firestore } from '../lib/firebase'
+import newTask from '../lib/newTask'
 
 export default () => {
   var project = window.location.pathname.match(/project\/(.*)/)
@@ -12,12 +12,7 @@ export default () => {
       <Button
         appearance='subtle'
         onClick={e => {
-          firestore.collection('tasks').add({
-            title: '',
-            project,
-            done: false,
-            user: require('js-cookie').get('userid')
-          })
+          newTask({ project }) 
         }}>
         + Add Task
       </Button>
