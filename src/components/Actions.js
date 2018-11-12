@@ -27,6 +27,7 @@ export default class Actions extends React.Component {
 
     // Get tasks in project
     var snapshot = await firestore.collection('tasks')
+      .where('user', '==', require('js-cookie').get('userid'))
       .where('project', '==', this.props.project.id)
       .get()
 
