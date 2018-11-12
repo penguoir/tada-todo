@@ -1,6 +1,7 @@
 import React from 'react'
 import { Checkbox } from '@atlaskit/checkbox'
 import { firestore } from '../lib/firebase'
+import newTask from '../lib/newTask'
 
 class Task extends React.Component {
   constructor(props) {
@@ -28,11 +29,7 @@ class Task extends React.Component {
   handleKeyDown(e) {
     // When pressing enter in a task, create a new task
     if (e.which === 13) {
-      firestore.collection('tasks').add({
-        title: '',
-        project: this.props.task.data().project,
-        user: require('js-cookie').get('userid')
-      })
+      newTask({ project: this.props.task.data().project })
     }
 
     // When pressing delete when the title is empty, delete the task

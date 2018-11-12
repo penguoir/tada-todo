@@ -34,10 +34,12 @@ class Index extends React.Component {
     var query = project
       ? firestore
           .collection('tasks')
+          .where('user', '==', userid)
           .where('project', '==', project[1])
           .orderBy('timestamp')
       : firestore
           .collection('tasks')
+          .where('user', '==', userid)
           .orderBy('timestamp')
     
     // Preform the query
