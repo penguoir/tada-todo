@@ -1,0 +1,32 @@
+{
+  "indexes": [
+    {
+      "collectionId": "tasks",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "user",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "tasks",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "project",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "mode": "ASCENDING"
+        }
+      ]
+    }
+  ]
+}
